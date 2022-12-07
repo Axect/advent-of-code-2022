@@ -1,5 +1,5 @@
-use std::fs;
 use crate::traits::Problem;
+use std::fs;
 use std::str::FromStr;
 
 #[derive(Debug, Clone)]
@@ -66,6 +66,9 @@ impl Problem<usize> for P001 {
             }
         }
 
-        Self { input: input.to_owned(), score: Some(max.0 + max.1 + max.2) }
+        Self {
+            input: input.to_owned(),
+            score: Some(max.0 + max.1 + max.2),
+        }
     }
 }

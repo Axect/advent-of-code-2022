@@ -1,7 +1,7 @@
 use std::fs;
 
-use RSP::{Rock, Scissors, Paper};
 use crate::traits::Problem;
+use RSP::{Paper, Rock, Scissors};
 
 #[derive(Debug, Clone)]
 pub struct P002 {
@@ -14,7 +14,6 @@ impl P002 {
         let input = fs::read_to_string("input/p002.txt").unwrap();
         Self { input, score: None }
     }
-
 }
 
 impl Problem<usize> for P002 {
@@ -50,7 +49,10 @@ impl Problem<usize> for P002 {
             score += battle(pl, op);
         }
 
-        Self { input: input.to_owned(), score: Some(score) }
+        Self {
+            input: input.to_owned(),
+            score: Some(score),
+        }
     }
 }
 
@@ -75,21 +77,21 @@ fn battle<S: RSPTrait, T: RSPTrait>(pl: S, op: T) -> usize {
 enum RSPOppo {
     A,
     B,
-    C
+    C,
 }
 
 #[derive(Debug, Clone, Copy)]
 enum RSPPlayer {
     X,
     Y,
-    Z
+    Z,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum RSP {
     Rock,
     Scissors,
-    Paper
+    Paper,
 }
 
 trait RSPTrait {

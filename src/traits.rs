@@ -16,5 +16,4 @@ pub trait Problem<T: Sized + Display>: Sized {
             Phase2 => format!("{}", self.phase2().solve()),
         }
     }
-
 }
