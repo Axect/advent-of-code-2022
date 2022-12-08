@@ -31,14 +31,33 @@ impl Problem<usize> for P003 {
             let alphabet = find_shared_alphabet(
                 split_half(line.trim())
             );
-            dbg!(alphabet);
             score += alphabet_to_ascii(alphabet);
         }
         score
     }
 
     fn phase2(&self) -> Self {
-        unimplemented!()
+        let input = self.input.trim();
+        let input = input.lines().map(|s| s.trim()).collect::<Vec<_>>();
+
+        let mut score = 0;
+
+        input.chunks(3).for_each(|chunk| {
+            let mut lens = chunk.iter().enumerate().map(|(i, line)| (i, line.len())).collect::<Vec<_>>();
+            lens.sort_by(|a, b| a.1.cmp(&b.1));
+            
+            let line_1 = chunk[lens[0].0].chars().collect::<Vec<_>>();
+            let line_2 = chunk[lens[1].0].chars().collect::<Vec<_>>();
+            let line_3 = chunk[lens[2].0].chars().collect::<Vec<_>>();
+
+            let alphabet = find_badge((&line_1, &line_2, &line_3));
+            score += alphabet_to_ascii(alphabet);
+        });
+
+        P003 {
+            input: self.input.clone(),
+            score: Some(score),
+        }
     }
 }
 
@@ -73,4 +92,61 @@ fn find_shared_alphabet((a, b): (&str, &str)) -> char {
     }
 
     unreachable!("No shared alphabet found");
+}
+
+fn find_badge((line_1, line_2, line_3): (&[char], &[char], &[char])) -> char {
+    let l_1 = line_1.len();
+
+    let mut set_1 = HashSet::new();
+    let mut set_2 = HashSet::new();
+    let mut set_3 = HashSet::new();
+
+    for ((&a,&b),&c) in line_1.iter().zip(line_2.iter()).zip(line_3.iter()) {
+        if set_2.contains(&a) && set_3.contains(&a) {
+            return a;
+        } else {
+            set_1.insert(a);
+        }
+
+        if set_1.contains(&b) && set_3.contains(&b) {
+            return b;
+        } else {
+            set_2.insert(b);
+        }
+
+        if set_1.contains(&c) && set_2.contains(&c) {
+            return c;
+        } else {
+            set_3.insert(c);
+        }
+    }
+
+    let line_2s = line_2.iter().skip(l_1).collect::<Vec<_>>();
+    let line_3s = line_3.iter().skip(l_1).collect::<Vec<_>>();
+
+    let l_2 = line_2s.len();
+
+    for (&&b, &&c) in line_2s.iter().zip(line_3s.iter()) {
+        if set_1.contains(&b) && set_3.contains(&b) {
+            return b;
+        } else {
+            set_2.insert(b);
+        }
+
+        if set_1.contains(&c) && set_2.contains(&c) {
+            return c;
+        } else {
+            set_3.insert(c);
+        }
+    }
+
+    let line_3s = line_3s.into_iter().skip(l_2).collect::<Vec<_>>();
+
+    for &c in line_3s.into_iter() {
+        if set_1.contains(&c) && set_2.contains(&c) {
+            return c;
+        }
+    }
+
+    unreachable!("No badge found");
 }
