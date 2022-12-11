@@ -7,7 +7,7 @@
 ## Calendar
 
 Problems | Solution | Data | Date
-:------: | :------: | :--: | :---:
+:------ | :------: | :--: | :---:
 001 Calorie Counting | [p001.rs](./src/problems/p001.rs) | [p001.txt](./input/p001.txt) | 2022-12-06
 002 Rock Paper Scissors | [p002.rs](./src/problems/p002.rs) | [p002.txt](./input/p002.txt) | 2022-12-07
 003 Rucksack Reorganization | [p003.rs](./src/problems/p003.rs) | [p003.txt](./input/p003.txt) | 2022-12-08
