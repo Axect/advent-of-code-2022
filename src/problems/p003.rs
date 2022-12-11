@@ -1,6 +1,6 @@
 use crate::traits::Problem;
-use std::fs;
 use std::collections::HashSet;
+use std::fs;
 
 #[derive(Debug, Clone)]
 pub struct P003 {
@@ -28,9 +28,7 @@ impl Problem<usize> for P003 {
         let mut score = 0;
 
         for line in input.lines() {
-            let alphabet = find_shared_alphabet(
-                split_half(line.trim())
-            );
+            let alphabet = find_shared_alphabet(split_half(line.trim()));
             score += alphabet_to_ascii(alphabet);
         }
         score
@@ -43,9 +41,13 @@ impl Problem<usize> for P003 {
         let mut score = 0;
 
         input.chunks(3).for_each(|chunk| {
-            let mut lens = chunk.iter().enumerate().map(|(i, line)| (i, line.len())).collect::<Vec<_>>();
+            let mut lens = chunk
+                .iter()
+                .enumerate()
+                .map(|(i, line)| (i, line.len()))
+                .collect::<Vec<_>>();
             lens.sort_by(|a, b| a.1.cmp(&b.1));
-            
+
             let line_1 = chunk[lens[0].0].chars().collect::<Vec<_>>();
             let line_2 = chunk[lens[1].0].chars().collect::<Vec<_>>();
             let line_3 = chunk[lens[2].0].chars().collect::<Vec<_>>();
@@ -101,7 +103,7 @@ fn find_badge((line_1, line_2, line_3): (&[char], &[char], &[char])) -> char {
     let mut set_2 = HashSet::new();
     let mut set_3 = HashSet::new();
 
-    for ((&a,&b),&c) in line_1.iter().zip(line_2.iter()).zip(line_3.iter()) {
+    for ((&a, &b), &c) in line_1.iter().zip(line_2.iter()).zip(line_3.iter()) {
         if set_2.contains(&a) && set_3.contains(&a) {
             return a;
         } else {
