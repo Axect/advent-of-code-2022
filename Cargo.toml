@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 aoc2022_proc = { path = "./aoc2022_proc" }
+regex = "1.7.0"
