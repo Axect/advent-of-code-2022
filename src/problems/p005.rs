@@ -3,11 +3,18 @@ use std::str::FromStr;
 use std::collections::HashMap;
 use crate::traits::Problem;
 use regex::Regex;
+use Crane::*;
 
 #[derive(Debug, Clone)]
 pub struct P005 {
     input: String,
     message: Option<String>,
+}
+
+#[derive(Debug, Clone, Copy)]
+enum Crane {
+    Old,
+    New,
 }
 
 impl P005 {
@@ -17,22 +24,13 @@ impl P005 {
             message: None,
         }
     }
-}
 
-impl Problem<String> for P005 {
-    fn solve(&self) -> String {
-        match &self.message {
-            None => (),
-            Some(msg) => return msg.to_string(),
-        }
-
-        let input = self.input.clone();
-
+    fn move_with_crane(&self, crane: Crane) -> Crates {
         let mut crates_str = String::new();
         let mut orders_str = String::new();
         let mut orders = false;
 
-        for line in input.lines() {
+        for line in self.input.lines() {
             if !orders {
                 if line.trim().is_empty() {
                     orders = true;
@@ -50,12 +48,26 @@ impl Problem<String> for P005 {
         let orders = Orders::from_str(&orders_str).unwrap();
 
         for inst in orders.into_iter() {
-            inst.move_crate(&mut crates);
+            match crane {
+                Old => inst.move_crate(&mut crates),
+                New => inst.move_crate_9001(&mut crates),
+            }
         }
 
-        let mut ans = String::new();
+        crates
+    }
+}
 
-        let cr = &crates.crates;
+impl Problem<String> for P005 {
+    fn solve(&self) -> String {
+        match &self.message {
+            None => (),
+            Some(msg) => return msg.to_string(),
+        }
+
+        let cr = self.move_with_crane(Old).crates;
+
+        let mut ans = String::new();
         
         for i in 1usize .. cr.len() + 1 {
             ans.push(cr.get(&i).unwrap().last().unwrap().clone());
@@ -65,7 +77,17 @@ impl Problem<String> for P005 {
     }
 
     fn phase2(&self) -> Self {
-        unimplemented!()
+        let cr = self.move_with_crane(New).crates;
+        let mut ans = String::new();
+
+        for i in 1usize .. cr.len() + 1 {
+            ans.push(cr.get(&i).unwrap().last().unwrap().clone());
+        }
+
+        P005 {
+            input: self.input.clone(),
+            message: Some(ans),
+        }
     }
 }
 
@@ -125,6 +147,34 @@ impl Instructions {
                 },
             };
             to_stack.push(c);
+        }
+
+        cr.crates.get_mut(&from).unwrap().clone_from(&from_stack);
+        cr.crates.get_mut(&to).unwrap().clone_from(&to_stack);
+    }
+
+    fn move_crate_9001(&self, cr: &mut Crates) {
+        let num = self.num;
+        let from = self.from;
+        let to = self.to;
+
+        let mut from_stack = cr.crates.get(&from).unwrap().clone();
+        let mut to_stack = cr.crates.get(&to).unwrap().clone();
+        let mut temp_stack = vec![];
+
+        for _ in 0..num {
+            let c = match from_stack.pop() {
+                Some(c) => c,
+                None => {
+                    dbg!(&self);
+                    println!("{}", cr);
+                    panic!("Not enough crates to move");
+                },
+            };
+            temp_stack.push(c);
+        }
+        for _ in 0 .. num {
+            to_stack.push(temp_stack.pop().unwrap());
         }
 
         cr.crates.get_mut(&from).unwrap().clone_from(&from_stack);

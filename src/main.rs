@@ -20,4 +20,5 @@ fn main() {
 
     let prob5 = num_to_prob!(5);
     println!("Problem 5-1: {}", prob5.ans_to_string(Phase1));
+    println!("Problem 5-2: {}", prob5.ans_to_string(Phase2));
 }
