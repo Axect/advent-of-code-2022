@@ -1,6 +1,7 @@
-use crate::traits::Problem;
 use std::fs;
 use std::str::FromStr;
+use std::collections::HashMap;
+use crate::traits::Problem;
 use regex::Regex;
 
 #[derive(Debug, Clone)]
@@ -12,9 +13,59 @@ pub struct P005 {
 impl P005 {
     pub fn new() -> Self {
         P005 {
-            input: fs::read_to_string("input/p005_test.txt").unwrap(),
+            input: fs::read_to_string("input/p005.txt").unwrap(),
             message: None,
         }
+    }
+}
+
+impl Problem<String> for P005 {
+    fn solve(&self) -> String {
+        match &self.message {
+            None => (),
+            Some(msg) => return msg.to_string(),
+        }
+
+        let input = self.input.clone();
+
+        let mut crates_str = String::new();
+        let mut orders_str = String::new();
+        let mut orders = false;
+
+        for line in input.lines() {
+            if !orders {
+                if line.trim().is_empty() {
+                    orders = true;
+                } else {
+                    crates_str.push_str(line);
+                    crates_str.push_str("\n");
+                }
+            } else {
+                orders_str.push_str(line);
+                orders_str.push_str("\n");
+            }
+        }
+
+        let mut crates = Crates::from_str(&crates_str).unwrap();
+        let orders = Orders::from_str(&orders_str).unwrap();
+
+        for inst in orders.into_iter() {
+            inst.move_crate(&mut crates);
+        }
+
+        let mut ans = String::new();
+
+        let cr = &crates.crates;
+        
+        for i in 1usize .. cr.len() + 1 {
+            ans.push(cr.get(&i).unwrap().last().unwrap().clone());
+        }
+
+        ans
+    }
+
+    fn phase2(&self) -> Self {
+        unimplemented!()
     }
 }
 
@@ -22,7 +73,25 @@ type Stack<T> = Vec<T>;
 
 #[derive(Debug, Clone)]
 struct Crates {
-    crates: Vec<Stack<char>>
+    crates: HashMap<usize, Stack<char>>
+}
+
+impl std::fmt::Display for Crates {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut result = String::new();
+
+        for i in 1 .. self.crates.len() + 1 {
+            result.push_str(&format!("{}: ", i));
+            for c in self.crates.get(&i).unwrap().iter() {
+                result.push('[');
+                result.push(*c);
+                result.push(']');
+            }
+            result.push_str("\n");
+        }
+
+        write!(f, "{}", result)
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -43,18 +112,23 @@ impl Instructions {
         let from = self.from;
         let to = self.to;
 
-        let mut stack = cr.crates[from].clone();
-        let mut new_stack = cr.crates[to].clone();
+        let mut from_stack = cr.crates.get(&from).unwrap().clone();
+        let mut to_stack = cr.crates.get(&to).unwrap().clone();
 
-        let mut i = 0;
-        while i < num {
-            let c = stack.pop().unwrap();
-            new_stack.push(c);
-            i += 1;
+        for _ in 0..num {
+            let c = match from_stack.pop() {
+                Some(c) => c,
+                None => {
+                    dbg!(&self);
+                    println!("{}", cr);
+                    panic!("Not enough crates to move");
+                },
+            };
+            to_stack.push(c);
         }
 
-        cr.crates[from] = stack;
-        cr.crates[to] = new_stack;
+        cr.crates.get_mut(&from).unwrap().clone_from(&from_stack);
+        cr.crates.get_mut(&to).unwrap().clone_from(&to_stack);
     }
 }
 
@@ -80,6 +154,7 @@ impl FromStr for Orders {
             let order = line.parse::<Instructions>().unwrap();
             orders.push(order);
         }
+        orders.reverse();
         Ok(
             Orders { orders }
         )
@@ -91,5 +166,37 @@ impl Iterator for Orders {
 
     fn next(&mut self) -> Option<Self::Item> {
         self.orders.pop()
+    }
+}
+
+impl FromStr for Crates {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut crates = HashMap::new();
+
+        for line in s.lines() {
+            line.chars().collect::<Vec<char>>()
+                .chunks(4)
+                .enumerate()
+                .for_each(|(i, c)| {
+                    let stack = crates.entry(i+1).or_insert(Vec::new());
+                    let c = c.iter().collect::<String>();
+                    let c = c.trim();
+                    let re = Regex::new(r"\[(\w)\]").unwrap();
+                    let caps = re.captures(c);
+                    if let Some(caps) = caps {
+                        let c = caps.get(1).unwrap().as_str().parse::<char>().unwrap();
+                        stack.push(c);
+                    }
+                });
+        }
+
+        crates.iter_mut().for_each(|(_, v)| {
+            v.reverse();
+        });
+
+        Ok(
+            Crates { crates }
+        )
     }
 }
