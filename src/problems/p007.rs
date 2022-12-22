@@ -88,14 +88,14 @@ pub struct Dir {
 
 #[derive(Debug, Clone)]
 pub struct File {
-    name: String,
+    _name: String,
     size: usize
 }
 
 impl File {
-    pub fn new(name: String, size: usize) -> Self {
+    pub fn new(_name: String, size: usize) -> Self {
         File {
-            name,
+            _name,
             size
         }
     }
@@ -127,27 +127,6 @@ impl Dir {
         };
         let dir = Dir::new(name.clone());
         self.dirs.insert(name, dir);
-    }
-
-    fn cd(&mut self, name: &str) -> &mut Dir {
-        match self.dirs.get_mut(name) {
-            Some(dir) => dir,
-            None => panic!("{} not found in dir {}", name, self.name)
-        }
-    }
-
-    fn calc_size(&mut self) -> usize {
-        if self.size.is_none() {
-            let mut size = 0;
-            for file in self.files.iter() {
-                size += file.size();
-            }
-            for dir in self.dirs.values_mut() {
-                size += dir.calc_size();
-            }
-            self.size = Some(size);
-        }
-        self.size.unwrap()
     }
 
     fn get_size(&self) -> usize {
@@ -257,8 +236,8 @@ impl FileSystem {
                     } else if re_file.is_match(line) {
                         let file = re_file.captures(line).unwrap();
                         let size = file.get(1).unwrap().as_str().parse::<usize>().unwrap();
-                        let name = file.get(2).unwrap().as_str();
-                        let file = File::new(name.to_string(), size);
+                        let _name = file.get(2).unwrap().as_str();
+                        let file = File::new(_name.to_string(), size);
                         curr_dir.add_file(file);
                     }
                 }
