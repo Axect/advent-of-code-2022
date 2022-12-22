@@ -5,6 +5,7 @@ pub use crate::problems::{
     p004::P004,
     p005::P005,
     p006::P006,
+    p007::P007,
 };
 pub use crate::traits::Phase::{Phase1, Phase2};
 pub use crate::traits::*;
