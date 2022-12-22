@@ -14,3 +14,4 @@ Problems | Solution | Data | Date
 004 Camp Cleanup | [p004.rs](./src/problems/p004.rs) | [p004.txt](./input/p004.txt) | 2022-12-11
 005 Supply Stacks | [p005.rs](./src/problems/p005.rs) | [p005.txt](./input/p005.txt) | 2022-12-15
 006 Tuning Trouble | [p006.rs](./src/problems/p006.rs) | [p006.txt](./input/p006.txt) | 2022-12-20
+007 No Space Left On Device | [p007.rs](./src/problems/p007.rs) | [p007.txt](./input/p007.txt) | 2022-12-22
