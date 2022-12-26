@@ -8,14 +8,12 @@ pub struct P001 {
     score: Option<usize>,
 }
 
-impl P001 {
-    pub fn new() -> Self {
+impl Problem<usize> for P001 {
+    fn new() -> Self {
         let input = fs::read_to_string("input/p001.txt").unwrap();
         Self { input, score: None }
     }
-}
 
-impl Problem<usize> for P001 {
     fn solve(&self) -> usize {
         match self.score {
             None => (),

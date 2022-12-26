@@ -1,36 +1,16 @@
 use aoc2022::prelude::*;
-use aoc2022_proc::num_to_prob;
+use std::env::args;
+use took::took;
+//use aoc2022_proc::num_to_prob;
 
 fn main() {
-    let prob1 = num_to_prob!(1);
-    println!("Problem 1-1: {}", prob1.ans_to_string(Phase1));
-    println!("Problem 1-2: {}", prob1.ans_to_string(Phase2));
+    let prob_num = args().nth(1).unwrap().parse::<usize>().unwrap();
+    let phase_num = args().nth(2).unwrap().parse::<usize>().unwrap();
+    let phase = num_to_phase(phase_num);
 
-    let prob2 = num_to_prob!(2);
-    println!("Problem 2-1: {}", prob2.ans_to_string(Phase1));
-    println!("Problem 2-2: {}", prob2.ans_to_string(Phase2));
+    let (took, ans) = took(|| {
+        get_ans(prob_num, phase)
+    });
 
-    let prob3 = num_to_prob!(3);
-    println!("Problem 3-1: {}", prob3.ans_to_string(Phase1));
-    println!("Problem 3-2: {}", prob3.ans_to_string(Phase2));
-
-    let prob4 = num_to_prob!(4);
-    println!("Problem 4-1: {}", prob4.ans_to_string(Phase1));
-    println!("Problem 4-2: {}", prob4.ans_to_string(Phase2));
-
-    let prob5 = num_to_prob!(5);
-    println!("Problem 5-1: {}", prob5.ans_to_string(Phase1));
-    println!("Problem 5-2: {}", prob5.ans_to_string(Phase2));
-
-    let prob6 = num_to_prob!(6);
-    println!("Problem 6-1: {}", prob6.ans_to_string(Phase1));
-    println!("Problem 6-2: {}", prob6.ans_to_string(Phase2));
-
-    let prob7 = num_to_prob!(7);
-    println!("Problem 7-1: {}", prob7.ans_to_string(Phase1));
-    println!("Problem 7-2: {}", prob7.ans_to_string(Phase2));
-
-    let prob8 = num_to_prob!(8);
-    println!("Problem 8-1: {}", prob8.ans_to_string(Phase1));
-    println!("Problem 8-2: {}", prob8.ans_to_string(Phase2));
+    println!("Problem {}-{}: {}\t{}", prob_num, phase_num, ans, took);
 }

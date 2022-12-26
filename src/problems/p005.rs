@@ -18,13 +18,6 @@ enum Crane {
 }
 
 impl P005 {
-    pub fn new() -> Self {
-        P005 {
-            input: fs::read_to_string("input/p005.txt").unwrap(),
-            message: None,
-        }
-    }
-
     fn move_with_crane(&self, crane: Crane) -> Crates {
         let mut crates_str = String::new();
         let mut orders_str = String::new();
@@ -59,6 +52,13 @@ impl P005 {
 }
 
 impl Problem<String> for P005 {
+    fn new() -> Self {
+        P005 {
+            input: fs::read_to_string("input/p005.txt").unwrap(),
+            message: None,
+        }
+    }
+
     fn solve(&self) -> String {
         match &self.message {
             None => (),

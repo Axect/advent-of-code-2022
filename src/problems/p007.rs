@@ -13,16 +13,14 @@ pub struct P007 {
     size: Option<usize>
 }
 
-impl P007 {
-    pub fn new() -> Self {
+impl Problem<usize> for P007 {
+    fn new() -> Self {
         P007 {
             input: fs::read_to_string("input/p007.txt").unwrap(),
             size: None
         }
     }
-}
 
-impl Problem<usize> for P007 {
     fn solve(&self) -> usize {
         if self.size.is_some() {
             return self.size.unwrap();

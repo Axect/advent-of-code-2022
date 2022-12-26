@@ -7,17 +7,14 @@ pub struct P008 {
     visible: Option<u32>,
 }
 
-impl P008 {
-    pub fn new() -> Self {
-        let input = fs::read_to_string("input/p008.txt").unwrap();
+impl Problem<u32> for P008 {
+    fn new() -> Self {
         P008 {
-            input,
+            input: fs::read_to_string("input/p008.txt").unwrap(),
             visible: None,
         }
     }
-}
 
-impl Problem<u32> for P008 {
     fn solve(&self) -> u32 {
         match self.visible {
             Some(vis) => return vis,

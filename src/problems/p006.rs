@@ -8,16 +8,14 @@ pub struct P006 {
     position: Option<usize>
 }
 
-impl P006 {
-    pub fn new() -> Self {
+impl Problem<usize> for P006 {
+    fn new() -> Self {
         P006 {
             input: fs::read_to_string("input/p006.txt").unwrap(),
             position: None
         }
     }
-}
 
-impl Problem<usize> for P006 {
     fn solve(&self) -> usize {
         match self.position {
             None => (),
