@@ -16,3 +16,11 @@ Problems | Solution | Data | Date
 006 Tuning Trouble | [p006.rs](./src/problems/p006.rs) | [p006.txt](./input/p006.txt) | 2022-12-20
 007 No Space Left On Device | [p007.rs](./src/problems/p007.rs) | [p007.txt](./input/p007.txt) | 2022-12-22
 008 Treetop Tree House | [p008.rs](./src/problems/p008.rs) | [p008.txt](./input/p008.txt) | 2022-12-26
+
+## Run
+
+```sh
+cargo run --release <DAY> <PART>
+```
+
+For example, if you want to solve Day 8 - 2nd problem : `cargo run --release 8 2`
