@@ -9,6 +9,7 @@ pub use crate::problems::{
     p006::P006,
     p007::P007,
     p008::P008,
+    p009::P009,
 };
 pub use crate::traits::Phase::{Phase1, Phase2};
 pub use crate::traits::*;
@@ -23,6 +24,7 @@ pub fn get_ans(problem_num: usize, phase: Phase) -> String {
         6 => get_ans_by_problem(P006::new(), phase),
         7 => get_ans_by_problem(P007::new(), phase),
         8 => get_ans_by_problem(P008::new(), phase),
+        9 => get_ans_by_problem(P009::new(), phase),
         _ => panic!("Problem {} not implemented", problem_num),
     }
 }
